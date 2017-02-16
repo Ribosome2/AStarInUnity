@@ -4,7 +4,7 @@ using System.Collections;
 public class PriorityQueue 
 {
     // node array to store the priority queue
-    private ArrayList nodes = new ArrayList();
+    public ArrayList nodes = new ArrayList();
 
     /// <summary>
     /// Number of nodes in the priority queue
