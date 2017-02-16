@@ -57,6 +57,35 @@ public class GridManager : MonoBehaviour
         CalculateObstacles();
     }
 
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            RaycastHit hit;
+            Transform camTransform = Camera.main.transform;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out hit,1000))
+            {
+                int indexCell = GetGridIndex(hit.point);
+                int col = GetColumn(indexCell);
+                int row = GetRow(indexCell);
+                if (col >= 0 && col < nodes.GetLength(0) && row >= 0 && row < nodes.GetLength(1))
+                {
+                    var node = nodes[row, col];
+                    if (node.IsObstacle())
+                    {
+                        node.MarkAsObstacle(false);
+                    }
+                    else
+                    {
+                        node.MarkAsObstacle(true);
+                    }
+                }
+                
+            }
+        }
+    }
+
     /// <summary>
     /// Calculate which cells in the grids are mark as obstacles
     /// </summary>
@@ -88,7 +117,8 @@ public class GridManager : MonoBehaviour
                 int row = GetRow(indexCell);
 
                 //Also make the node as blocked status
-                nodes[row, col].MarkAsObstacle();
+                var node = nodes[row, col];
+                node.MarkAsObstacle(true);
             }
         }
     }
@@ -238,17 +268,22 @@ public class GridManager : MonoBehaviour
         Gizmos.DrawSphere(transform.position, 0.5f);
 
         //Draw Obstacle obstruction
-        if (showObstacleBlocks)
+        if (showObstacleBlocks && nodes!=null)
         {
             Vector3 cellSize = new Vector3(gridCellSize, 1.0f, gridCellSize);
-
-            if (obstacleList != null && obstacleList.Length > 0)
+            for (int i = 0; i < nodes.GetLength(0); i++)
             {
-                foreach (GameObject data in obstacleList)
+                for (int j = 0; j < nodes.GetLength(1); j++)
                 {
-                    Gizmos.DrawCube(GetGridCellCenter(GetGridIndex(data.transform.position)), cellSize);
+                    var node = nodes[i, j];
+                    if (node.IsObstacle())
+                    {
+                        Gizmos.DrawCube(node.position, cellSize);
+                    }
                 }
             }
+
+           
         }
     }
 

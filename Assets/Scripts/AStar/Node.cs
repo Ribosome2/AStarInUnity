@@ -39,9 +39,14 @@ public class Node : IComparable
     /// <summary>
     //Make the node to be noted as an obstacle
     /// </summary>
-    public void MarkAsObstacle()
+    public void MarkAsObstacle(bool isObstacle)
     {
-        this.bObstacle = true;
+        this.bObstacle = isObstacle;
+    }
+
+    public bool IsObstacle()
+    {
+        return this.bObstacle;
     }
 
     /// <summary>
